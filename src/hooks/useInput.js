@@ -5,7 +5,7 @@ function useInput(key, initValue) {
 	const reset = () => setValue(initValue);
 	const attributeObj = {
 		value,
-		onChange: (e) => setValue(e.target.value),
+		onChange: (e) => setValue(e.target.value)
 	};
 	return [value, reset, attributeObj];
 }

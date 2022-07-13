@@ -6,6 +6,7 @@ import axios from '../api/axios';
 
 const USER_REGEX = /^[A-z][A-z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
+// eslint-disable-next-line no-useless-escape
 const EMAIL_REGEX = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,8}$/;
 const REGISTER_URL = '/api/auth/signup';
 
@@ -79,10 +80,10 @@ export default function Register() {
 				email,
 				password: pwd,
 				gender,
-				roles: ['user'],
+				roles: ['user']
 			};
 			await axios.post(REGISTER_URL, JSON.stringify(body), {
-				headers: { 'Content-Type': 'application/json' },
+				headers: { 'Content-Type': 'application/json' }
 			});
 			setSuccess(true);
 		} catch (error) {
