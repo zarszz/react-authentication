@@ -3,11 +3,13 @@ import AuthContext from '../context/AuthProvider';
 import axios from '../api/axios';
 import useAuth from '../hooks/useAuth';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
+import useInput from '../hooks/useInput';
+import useToggle from '../hooks/useToggle';
 
 const SIGNIN_URL = '/api/auth/signin';
 
 export default function Login() {
-	const { setAuth, persist, setPersist } = useAuth(AuthContext);
+	const { setAuth } = useAuth(AuthContext);
 
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -16,9 +18,10 @@ export default function Login() {
 	const userRef = useRef();
 	const errRef = useRef();
 
-	const [user, setUser] = useState('');
+	const [user, resetUser, userAttribs] = useInput('user', '');
 	const [pwd, setPwd] = useState('');
 	const [errMsg, setErrMsg] = useState('');
+	const [check, toggleCheck] = useToggle('persist', false);
 
 	useEffect(() => {
 		userRef.current.focus();
@@ -35,7 +38,7 @@ export default function Login() {
 			const accessToken = response?.data?.accessToken;
 			const roles = response?.data?.roles;
 			setAuth({ user, pwd, roles, accessToken });
-			setUser('');
+			resetUser();
 			setPwd('');
 			navigate(from, { replace: true });
 		} catch (error) {
@@ -51,13 +54,13 @@ export default function Login() {
 		}
 	};
 
-	const togglePersist = () => {
-		setPersist((prev) => !prev);
-	};
+	// const togglePersist = () => {
+	// 	setPersist((prev) => !prev);
+	// };
 
-	useEffect(() => {
-		localStorage.setItem('persist', persist);
-	}, [persist]);
+	// useEffect(() => {
+	// 	localStorage.setItem('persist', persist);
+	// }, [persist]);
 
 	return (
 		<section>
@@ -67,21 +70,12 @@ export default function Login() {
 			<h1>Sign In</h1>
 			<form onSubmit={handleSubmit}>
 				<label htmlFor="username">Username : </label>
-				<input
-					type="text"
-					name=""
-					id="username"
-					ref={userRef}
-					autoComplete="off"
-					onChange={(e) => setUser(e.target.value)}
-					value={user}
-					required
-				/>
+				<input type="text" name="" id="username" ref={userRef} autoComplete="off" {...userAttribs} required />
 				<label htmlFor="password">Password : </label>
 				<input type="password" id="password" onChange={(e) => setPwd(e.target.value)} value={pwd} required />
 				<button>Sign In</button>
 				<div className="persistCheck">
-					<input type="checkbox" id="persist" onChange={togglePersist} value={persist} />
+					<input type="checkbox" id="persist" onChange={toggleCheck} checked={check} />
 					<label htmlFor="persist">Trust This Device</label>
 				</div>
 			</form>
