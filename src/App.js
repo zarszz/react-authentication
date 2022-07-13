@@ -10,6 +10,8 @@ import Home from './components/Home';
 
 import Missing from './components/Missing';
 
+import PersistLogin from './components/PersistLogin';
+
 import Layout from './components/Layout';
 import { Routes, Route } from 'react-router-dom';
 import RequireAuth from './components/RequireAuth';
@@ -25,16 +27,18 @@ function App() {
 				<Route path="unauthorized" element={<Unauthorized />} />
 
 				{/** protected routes */}
-				<Route element={<RequireAuth allowedRoles={['ROLE_USER']} />}>
-					<Route path="/" element={<Home />} />
-					<Route element={<RequireAuth allowedRoles={['ROLE_EDITOR']} />}>
-						<Route path="/editor" element={<Editor />} />
-					</Route>
-					<Route element={<RequireAuth allowedRoles={['ROLE_ADMIN']} />}>
-						<Route path="/admin" element={<Admin />} />
-					</Route>
-					<Route element={<RequireAuth allowedRoles={['ROLE_ADMIN', 'ROLE_EDITOR']} />}>
-						<Route path="/lounge" element={<Lounge />} />
+				<Route element={<PersistLogin />}>
+					<Route element={<RequireAuth allowedRoles={['ROLE_USER']} />}>
+						<Route path="/" element={<Home />} />
+						<Route element={<RequireAuth allowedRoles={['ROLE_EDITOR']} />}>
+							<Route path="/editor" element={<Editor />} />
+						</Route>
+						<Route element={<RequireAuth allowedRoles={['ROLE_ADMIN']} />}>
+							<Route path="/admin" element={<Admin />} />
+						</Route>
+						<Route element={<RequireAuth allowedRoles={['ROLE_ADMIN', 'ROLE_EDITOR']} />}>
+							<Route path="/lounge" element={<Lounge />} />
+						</Route>
 					</Route>
 				</Route>
 

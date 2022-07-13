@@ -7,7 +7,7 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 const SIGNIN_URL = '/api/auth/signin';
 
 export default function Login() {
-	const { setAuth } = useAuth(AuthContext);
+	const { setAuth, persist, setPersist } = useAuth(AuthContext);
 
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -51,6 +51,14 @@ export default function Login() {
 		}
 	};
 
+	const togglePersist = () => {
+		setPersist((prev) => !prev);
+	};
+
+	useEffect(() => {
+		localStorage.setItem('persist', persist);
+	}, [persist]);
+
 	return (
 		<section>
 			<p ref={errRef} className={errMsg ? 'errmsg' : 'offscreen'} aria-live="assertive">
@@ -72,6 +80,10 @@ export default function Login() {
 				<label htmlFor="password">Password : </label>
 				<input type="password" id="password" onChange={(e) => setPwd(e.target.value)} value={pwd} required />
 				<button>Sign In</button>
+				<div className="persistCheck">
+					<input type="checkbox" id="persist" onChange={togglePersist} value={persist} />
+					<label htmlFor="persist">Trust This Device</label>
+				</div>
 			</form>
 			<p>
 				Need an Account ? <br />
